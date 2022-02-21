@@ -10,7 +10,7 @@ class goodEl {
 
 class goodsList {
     constructor() {
-        this.basket = {};
+        this.basket = [];
     }
 
     /**
@@ -18,10 +18,10 @@ class goodsList {
      * @param {object} goodEl - экземпляр класса товара.
      */
     addToBasket(goodEl) {
-        if (!(goodEl.id in this.basket)) {
-            this.basket[goodEl.id] = { id: goodEl.id, name: goodEl.name, price: goodEl.price, count: 0 };
+        if (!(this.basket.find(el => el.id === goodEl.id))) {
+            this.basket.push({ id: goodEl.id, name: goodEl.name, price: goodEl.price, count: 0 });
         }
-        this.basket[goodEl.id].count++;
+        this.basket.find(el => el.id === goodEl.id).count++;
     }
 
     /**
@@ -29,16 +29,16 @@ class goodsList {
      * @param {object} goodEl - экземпляр класса товара.
      */
     deleteFromBasket(goodEl) {
-        if (!(goodEl.id in this.basket)) {
+        if (!(this.basket.find(el => el.id === goodEl.id))) {
             console.error('Нельзя удалить продукт которого нет в корзине');
             return;
         }
-        if (this.basket[goodEl.id].count === 1) {
-            delete this.basket[goodEl.id];
+        if (this.basket.find(el => el.id === goodEl.id).count === 1) {
+            this.basket.splice(this.basket.findIndex(el => el.id === goodEl.id));
             return;
         }
-        if (this.basket[goodEl.id].count > 1) {
-            this.basket[goodEl.id].count--;
+        if (this.basket.find(el => el.id === goodEl.id).count > 1) {
+            this.basket.find(el => el.id === goodEl.id).count--;
         }
     }
 
@@ -48,7 +48,7 @@ class goodsList {
      */
     getTotalBasketCount() {
         let totalCount = 0;
-        Object.values(this.basket).forEach(el => totalCount += el.count);
+        this.basket.forEach(el => totalCount += el.count);
         return totalCount;
     }
     /**
@@ -57,21 +57,19 @@ class goodsList {
      */
     getTotalBasketPrice() {
         let totalPrice = 0;
-        Object
-            .values(this.basket)
-            .forEach(el => totalPrice += el.price * el.count);
+        this.basket.forEach(el => totalPrice += el.price * el.count);
         return totalPrice;
     }
 }
 
 const myGoodsList = new goodsList();
 
-myGoodsList.addToBasket(new goodEl(1, 'Product 1', 100));
-myGoodsList.addToBasket(new goodEl(2, 'Product 2', 200));
-myGoodsList.addToBasket(new goodEl(3, 'Product 3', 300));
-myGoodsList.addToBasket(new goodEl(1, 'Product 1', 100));
-myGoodsList.addToBasket(new goodEl(1, 'Product 1', 100));
-myGoodsList.deleteFromBasket(new goodEl(1, 'Product 1', 100));
+myGoodsList.addToBasket(new goodEl(11, 'Product 1', 100));
+myGoodsList.addToBasket(new goodEl(22, 'Product 2', 200));
+myGoodsList.addToBasket(new goodEl(33, 'Product 3', 300));
+myGoodsList.addToBasket(new goodEl(11, 'Product 1', 100));
+myGoodsList.addToBasket(new goodEl(11, 'Product 1', 100));
+myGoodsList.deleteFromBasket(new goodEl(11, 'Product 1', 100));
 console.log(myGoodsList);
 console.log(myGoodsList.getTotalBasketCount());
 console.log(myGoodsList.getTotalBasketPrice());

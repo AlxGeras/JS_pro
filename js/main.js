@@ -40,35 +40,49 @@ let getRequest = (url, cb) => {
   });
 };
 
-class ProductList {
-  constructor(container = '.products') {
-    this._container = document.querySelector(container);
+class List {
+  constructor(container, list = listContext) {
+    this.container = container;
     this._goods = [];
-    this._allProducts = [];
-    this._goodsInBasket = {};
-    this._basketEl = document.querySelector('.basket');
-    this._btnCartEl = document.querySelector('.btn-cart');
-    this._basketTotalValueEl = document.querySelector('.basketTotalValue');
-    this._basketTotalEl = document.querySelector('.basketTotal');
-    this._btnCartEl.addEventListener('click', () => {
-      this._basketEl.classList.toggle('hidden');
-    });
+    this.list = list;
+    this.allProducts = [];
+  }
 
-    this.getProducts()
-      .then((data) => {
-        this._goods = data;
-        this._render();
-      });
 
-    this.getBasket()
-      .then((data) => {
-        data.contents
-          .forEach((el) => {
-            this.addToCartFromHistory(el.id_product, el.product_name, el.price, el.quantity);
-          })
-      })
-      ;
+  /**
+   * обработка полученных данных
+   * @param data
+   */
+  handleData(data) {
+    this._goods = data;
+    this._render();
+  }
 
+  _render() {
+    const block = document.querySelector(this.container);
+    console.log('rendering data...');
+    for (const product of this._goods) {
+      const productObj = new this.list[this.constructor.name](product);
+      this.allProducts.push(productObj);
+      block.insertAdjacentHTML(productObj.position, productObj.render());
+    }
+  }
+}
+
+
+
+class ProductList extends List {
+  constructor(cart, container = '.products') {
+    super(container)
+    this.cart = cart;
+    this._container = document.querySelector(container);
+    this.getProducts().then(data => this.handleData(data));
+    this.init();
+    console.log(this);
+
+  }
+
+  init() {
     this._container.addEventListener('click', event => {
       // Проверяем, если клик был не по кнопке с селектором ".buy-btn", а также
       // такого селектора не существует среди родителей элемента, по которому был
@@ -83,10 +97,9 @@ class ProductList {
       const name = this._goods.find(productItem => productItem.id_product === id).product_name;
       const price = this._goods.find(productItem => productItem.id_product === id).price;
       // Добавляем в корзину продукт.
-      this.addToCart(id, name, price);
+      cart.addToCart(id, name, price);
     });
-
-    this._basketEl.addEventListener('click', event => {
+    cart._basketEl.addEventListener('click', event => {
       // Проверяем, если клик был не по кнопке с селектором ".fa-trash-can", а также
       // такого селектора не существует среди родителей элемента, по которому был
       // произведен клик, то ничего не делаем, уходим из функции.
@@ -98,9 +111,8 @@ class ProductList {
       const productItemEl = event.target.closest('.basketRow');
       const id = +productItemEl.dataset.id;
       // Удаляем продукт из корзины.
-      this.deleteFromCart(id);
+      cart.deleteFromCart(id);
     });
-
   }
 
   /**
@@ -111,6 +123,32 @@ class ProductList {
     return this._goodsInBasket;
   }
 
+  getProducts() {
+    return fetch(`${API}/catalogData.json`)
+      .then((response) => response.json())
+      .catch((err) => console.log(err));
+  }
+
+}
+
+
+class Cart extends List {
+  constructor(container = '.basketTotal') {
+    super(container)
+    this._basketEl = document.querySelector('.basket');
+    this._goodsInBasket = [];
+    this._basketTotalValueEl = document.querySelector('.basketTotalValue');
+    this._basketTotalEl = document.querySelector('.basketTotal');
+    this.getBasket().then(data => this.handleData(data.contents));
+    this.init();
+  }
+
+  init() {
+    document.querySelector('.btn-cart').addEventListener('click', () => {
+      this._basketEl.classList.toggle('hidden');
+      this._basketTotalValueEl.textContent = this.getTotalBasketPrice().toFixed(2)
+    })
+  }
 
   /**
   * Функция добавляет продукт в корзину.
@@ -121,35 +159,16 @@ class ProductList {
   addToCart(id, name, price) {
     this.getPossibleToAddBasket().then((data) => {
       if (data.result === 1) {
-        // Если такого продукта еще не было добавлено в наш объект, который хранит
-        // все добавленные товары, то создаем новый объект.
-        if (!(id in this._goodsInBasket)) {
-          this._goodsInBasket[id] = { id: id, name: name, price: price, count: 0 };
+        if ((this.allProducts.find(el => el.id_product === id))) {
+          this.allProducts.find(el => el.id_product === id).quantity++;
         }
-        // Добавляем в количество +1 к продукту.
-        this._goodsInBasket[id].count++;
         // Ставим новую общую стоимость товаров в корзине.
         this._basketTotalValueEl.textContent = this.getTotalBasketPrice().toFixed(2);
         // Отрисовываем продукт с данным id.
-        this.renderProductInBasket(id);
+        this.renderProductInBasket(id, name, price);
       }
     });
 
-  }
-
-
-  /**
-  * Функция добавляет продукт в корзину из истории покупок.
-  * @param {number} id - Id продукта.
-  * @param {string} name - Название продукта.
-  * @param {number} price - Цена продукта.
-  */
-  addToCartFromHistory(id, name, price, count) {
-    this._goodsInBasket[id] = { id: id, name: name, price: price, count: count };
-    // Ставим новую общую стоимость товаров в корзине.
-    this._basketTotalValueEl.textContent = this.getTotalBasketPrice().toFixed(2);
-    // Отрисовываем продукт с данным id.
-    this.renderProductInBasket(id);
   }
 
   /**
@@ -159,11 +178,11 @@ class ProductList {
   deleteFromCart(id) {
     this.getPossibleToDeleteFromBasket().then((data) => {
       if (data.result === 1) {
-        this._goodsInBasket[id].count = 0;
+        let find = this.allProducts.find(product => product.id_product === id);
+        this.allProducts.splice(this.allProducts.indexOf(find), 1);
         const basketRowEl = this._basketEl
           .querySelector(`.basketRow[data-id="${id}"]`);
         basketRowEl.remove();
-
         // Ставим новую общую стоимость товаров в корзине.
         this._basketTotalValueEl.textContent = this.getTotalBasketPrice().toFixed(2);
       }
@@ -171,64 +190,42 @@ class ProductList {
 
   }
 
-  getTotalBasketPrice() {
-    return Object
-      .values(this._goodsInBasket)
-      .reduce((acc, product) => acc + product.price * product.count, 0);
-  }
-
   /**
-   * Отрисовывает в корзину информацию о продукте.
-   * @param {number} productId - Id продукта.
-   */
-  renderProductInBasket(productId) {
+ * Отрисовывает в корзину информацию о продукте.
+ * @param {number} productId - Id продукта.
+ */
+  renderProductInBasket(id, name, price) {
     // Получаем строку в корзине, которая отвечает за данный продукт.
     const basketRowEl = this._basketEl
-      .querySelector(`.basketRow[data-id="${productId}"]`);
+      .querySelector(`.basketRow[data-id="${id}"]`);
     // Если такой строки нет, то отрисовываем новую строку.
     if (!basketRowEl) {
-      this.renderNewProductInBasket(productId);
+      let productEL = {
+        id_product: id,
+        price: price,
+        product_name: name,
+        quantity: 1
+      };
+      this._goods = [productEL];
+      this._render();
       return;
     }
 
     // Получаем данные о продукте из объекта корзины, где хранятся данные о всех
     // добавленных продуктах.
-    const product = this._goodsInBasket[productId];
+    const product = this.allProducts.find(el => el.id_product === id);
     // Ставим новое количество в строке продукта корзины.
-    basketRowEl.querySelector('.productCount').textContent = product.count;
+    basketRowEl.querySelector('.productQuantity').textContent = product.quantity;
     // Ставим нужную итоговую цену по данному продукту в строке продукта корзины.
     basketRowEl
       .querySelector('.productTotalRow')
-      .textContent = (product.price * product.count).toFixed(2);
+      .textContent = (product.price * product.quantity).toFixed(2);
   }
 
-  /**
-   * Функция отрисовывает новый товар в корзине.
-   * @param {number} productId - Id товара.
-   */
-  renderNewProductInBasket(productId) {
-    const productRow = `
-    <div class="basketRow" data-id="${productId}">
-      <div>${this._goodsInBasket[productId].name}</div>
-      <div>
-        <span class="productCount">${this._goodsInBasket[productId].count}</span> шт.
-      </div>
-      <div>$${this._goodsInBasket[productId].price}</div>
-      <div>
-        $<span class="productTotalRow">${(this._goodsInBasket[productId].price * this._goodsInBasket[productId].count).toFixed(2)}</span>
-      </div>
-      <div>
-          <i class="fa-solid fa-trash-can"></i>
-      </div>
-    </div>
-    `;
-    this._basketTotalEl.insertAdjacentHTML("beforebegin", productRow);
-  }
 
-  getProducts() {
-    return fetch(`${API}/catalogData.json`)
-      .then((response) => response.json())
-      .catch((err) => console.log(err));
+  getTotalBasketPrice() {
+    return this.allProducts
+      .reduce((acc, product) => acc + product.price * product.quantity, 0);
   }
 
   getBasket() {
@@ -249,30 +246,27 @@ class ProductList {
       .catch((err) => console.log(err));
   }
 
-  _render() {
-    console.log('rendering data...');
-    for (const product of this._goods) {
-      const productObject = new ProductItem(product);
+}
 
-      this._allProducts.push(productObject);
-      this._container.insertAdjacentHTML('beforeend', productObject.getHTMLString());
-    }
+class Item {
+  constructor(el, img = 'https://via.placeholder.com/200x150') {
+    this.product_name = el.product_name;
+    this.price = el.price;
+    this.id_product = el.id_product;
+    this.img = img;
+    this.position = 'beforeend';
+  }
+  render() {
+    return ``;
   }
 }
 
-class ProductItem {
-  constructor(product, img = 'https://via.placeholder.com/200x150') {
-    this.id = product.id_product;
-    this.title = product.product_name;
-    this.price = product.price;
-    this.img = img;
-  }
-
-  getHTMLString() {
-    return `<div class="product-item" data-id="${this.id}">
+class ProductItem extends Item {
+  render() {
+    return `<div class="product-item" data-id="${this.id_product}">
               <img src="${this.img}" alt="Some img">
               <div class="desc">
-                  <h3>${this.title}</h3>
+                  <h3>${this.product_name}</h3>
                   <p>${this.price} \u20bd</p>
                   <button class="buy-btn">Купить</button>
               </div>
@@ -280,4 +274,43 @@ class ProductItem {
   }
 }
 
-const productList = new ProductList();
+class CartItem extends Item {
+  constructor(el, img = 'https://via.placeholder.com/50x100') {
+    super(el, img);
+    this.quantity = el.quantity;
+    this.position = 'beforebegin';
+  }
+  /**
+   * Функция отрисовывает новый товар в корзине.
+   * @param {number} productId - Id товара.
+   */
+  render() {
+
+    return `
+      <div class="basketRow" data-id="${this.id_product}">
+        <div>${this.product_name}</div>
+        <div>
+          <span class="productQuantity">${this.quantity}</span> шт.
+        </div>
+        <div>$${this.price}</div>
+        <div>
+          $<span class="productTotalRow">${(this.price *
+        this.quantity).toFixed(2)}</span>
+        </div>
+        <div>
+            <i class="fa-solid fa-trash-can"></i>
+        </div>
+      </div>
+      `;
+  }
+}
+
+
+
+const listContext = {
+  ProductList: ProductItem,
+  Cart: CartItem,
+};
+
+const cart = new Cart();
+const productList = new ProductList(cart);

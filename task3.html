@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Homework</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css">
+  <style>
+    .error {
+      border: 0.3rem solid red;
+    }
+  </style>
+</head>
+
+<body>
+
+  <form>
+    <label>
+      Name:
+      <input class="form-control" data-name="name" type="text">
+    </label>
+    <br>
+    Pthone:
+    <input class="form-control" data-name="phone" type="text">
+    </label>
+    <br>
+    E-mail:
+    <input class="form-control" data-name="mail" type="text">
+    </label>
+    <br>
+    <textarea class="form-control" cols="30" rows="10" data-name="text"></textarea>
+    <br>
+    <button>Отправить</button>
+  </form>
+
+  <script>
+    "use strict";
+
+    const regExpList =
+    {
+      'name': /^[a-z]+$/i,
+      'phone': /^\+\d\(\d{3}\)\d{3}-\d{4}$/,
+      'mail': /^(\w+[.-])*\w+@\w+\.\w{2,6}$/i,
+      'text': /.+/i,
+    }
+
+    const alertMessages = {
+      'name': 'Имя должно содержать только буквы',
+      'phone': 'Телефон должен имееть формат +7(000)000-0000.',
+      'mail': 'E-mail должен иметь формат mymail@mail.ru, или my.mail@mail.ru, или my-mail@mail.ru.',
+      'text': 'Текст произвольный',
+    }
+
+    let alertMessage;
+
+    const formEl = document.querySelector('form');
+    const formControlEls = formEl.querySelectorAll('input, textarea');
+    formEl.addEventListener('submit', event => {
+      alertMessage = '';
+      formControlEls.forEach(formControlEl => {
+        if (!regExpList[formControlEl.dataset['name']].test(formControlEl.value)) {
+          formControlEl.classList.add('error');
+          alertMessage += alertMessages[formControlEl.dataset['name']] + '\n';
+          event.preventDefault();
+        }
+      });
+      alertMessage ? alert(alertMessage) : null;
+    });
+
+    formEl.addEventListener('input', event => {
+      if (!event.target.classList.contains('form-control')) {
+        return;
+      }
+      !regExpList[event.target.dataset['name']].test(event.target.value)
+        ? event.target.classList.add('error')
+        : event.target.classList.remove('error');
+    });
+  </script>
+</body>
+
+
+
+</html>

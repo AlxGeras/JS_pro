@@ -1,0 +1,111 @@
+[
+    {
+        "id_product": 1,
+        "product_name": "Ellery",
+        "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+        "price": "52.00",
+        "img": "img/product_card_1.png",
+        "page" : ["index", "catalog"],
+        "collection" : "men"
+    },
+    {
+        "id_product": 2,
+        "product_name": "Ellery capsule",
+        "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+        "price": "52.00",
+        "img": "img/product_card_2.png",
+        "page" : ["index"],
+        "collection" : "women"
+    },
+    {
+        "id_product": 3,
+        "product_name": "Ell",
+        "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+        "price": "52.00",
+        "img": "img/product_card_3.png",
+        "page" : ["index", "product", "catalog"],
+        "collection" : "men"
+    },
+    {
+        "id_product": 4,
+        "product_name": "capsule",
+        "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+        "price": "52.00",
+        "img": "img/product_card_4.png",
+        "page" : ["index", "product" , "catalog"],
+        "collection" : "men"
+    },
+    {
+        "id_product": 5,
+        "product_name": "apsule",
+        "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+        "price": "52.00",
+        "img": "img/product_card_5.png",
+        "page" : ["index"],
+        "collection" : "women"
+    },
+    {
+        "id_product": 6,
+        "product_name": "ule",
+        "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+        "price": "52.00",
+        "img": "img/product_card_6.png",
+        "page" : ["index", "product"]
+        ,
+        "collection" : "women"
+    },
+    {
+        "id_product": 7,
+        "product_name": "Ellery capsule",
+        "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+        "price": "52.00",
+        "img": "img/catalog_card_2.png",
+        "page" : ["catalog"],
+        "collection" : "men"
+    },
+    {
+        "id_product": 8,
+        "product_name": "apsule",
+        "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+        "price": "52.00",
+        "img": "img/catalog_card_5.png",
+        "page" : ["catalog"],
+        "collection" : "men"
+    },
+    {
+        "id_product": 9,
+        "product_name": "ule",
+        "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+        "price": "52.00",
+        "img": "img/catalog_card_6.png",
+        "page" : ["catalog"],
+        "collection" : "men"
+    },
+    {
+        "id_product": 10,
+        "product_name": "ule",
+        "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+        "price": "52.00",
+        "img": "img/catalog_card_7.png",
+        "page" : ["catalog"],
+        "collection" : "men"
+    },
+    {
+        "id_product": 11,
+        "product_name": "ule",
+        "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+        "price": "52.00",
+        "img": "img/catalog_card_8.png",
+        "page" : ["catalog"],
+        "collection" : "men"
+    },
+    {
+        "id_product": 12,
+        "product_name": "ule",
+        "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+        "price": "52.00",
+        "img": "img/catalog_card_9.png",
+        "page" : ["catalog"],
+        "collection" : "men"
+    }
+]

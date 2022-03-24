@@ -1,0 +1,127 @@
+.categories{
+    padding-top: 65px;
+    padding-bottom: 96px;
+}
+
+.categories-list{
+    display: flex;
+    list-style-type: none;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.category-link{
+    text-decoration: none;
+}
+
+.category{
+ background-color: #C4C4C4;
+ width: 360px;
+ height: 260px;
+ position: relative;
+ background-size: cover;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ position: relative;
+ z-index: 3;
+}
+
+.category-list-item .category {
+    &:before{
+        @include bcg-blackout;
+        background-color:rgba(33, 22, 22, 0.7);
+        transition-duration:  0.5s;
+    }
+    &:hover{
+        &:before{
+            @include bcg-blackout;
+            background-color:rgba(33, 22, 22, 0.5);
+        }
+    }
+}
+
+.category-list-item:nth-child(1) .category {
+    
+    background-image: url(../img/for_women_.png);
+}
+
+
+.category-list-item:nth-child(2) .category{
+    background-image: url(../img/for_men_.png);
+}
+
+.category-list-item:nth-child(3) .category{
+    background-image: url(../img/for_kids_.png);
+}
+
+.category-list-item:nth-child(4) .category, .category-list-item:nth-child(4) {
+    background-image: url(../img/ACCESORIES_.png);
+    width: 100%;
+    height: 180px;
+    background-size: cover;
+}
+
+.category-title{
+    text-align: center;
+}
+
+.category-title-top{
+    font-size: 16px;
+    line-height: 19px;
+    color: #FFFFFF;
+    padding-bottom: 2px;
+}
+
+.category-title-bottom{
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 29px;
+    text-align: center;
+    color: $main-color;
+}
+
+@media (max-width:1200px) {
+
+    .categories{
+        padding-top: 20px;
+        padding-bottom: 154px;
+    }
+
+    .categories-list{
+        gap: 18px;
+    }
+
+    .category{
+        width: 232px;
+        height: 167px;
+    }
+
+    .category-list-item:nth-child(4) .category, .category-list-item:nth-child(4) {
+        height: 116px;
+    }
+
+}
+
+@media (max-width:767px) {
+
+    .categories{
+        padding-top: 64px;
+        padding-bottom: 64px;
+    }
+
+    .categories-list{
+        gap: 32px;
+        justify-content:  center;
+    }
+
+    .category{
+        width: 343px;
+        height: 249px;
+    }
+
+    .category-list-item:nth-child(4) .category, .category-list-item:nth-child(4) {
+    height: 111px;
+    }
+
+}

@@ -1,0 +1,117 @@
+@import "_variables.scss";
+
+@mixin wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+@mixin bcg-blackout {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100%;
+  font-family: "Lato", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#app {
+  height: 100%;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+.hidden {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  left: -999999px;
+  margin: -1px;
+}
+
+.wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+@import "_main-header.scss";
+
+@import "index/_offer";
+
+@import "index/_product-section";
+
+@import "index/_category-section";
+
+@import "index/_feature-section";
+
+@import "_main-footer";
+
+@import "_nav_info";
+
+/*START CATALOG PAGE*/
+
+@import "catalog/_filter.scss";
+
+@import "catalog/_param-block.scss";
+
+@import "catalog/_catalog.scss";
+
+/*END CATALOG PAGE*/
+
+/*START PRODUCT PAGE*/
+
+@import "product/_slider.scss";
+
+/*END PRODUCT PAGE*/
+
+/*START REGISTRAION PAGE*/
+
+@import "_registration.scss";
+
+/*END REGISTRAION PAGE*/
+
+/*START SHOPPING CART PAGE*/
+
+@import "shopping-cart/_shopping-cart.scss";
+
+/*END SHOPPING CART PAGE*/
+
+/*START TABLET VERSION*/
+
+@media (max-width: 1200px) {
+  .wrap {
+    max-width: 737px;
+  }
+}
+
+/*END TABLET PAGE*/
+
+/*START MOBILE VERSION*/
+
+@media (max-width: 767px) {
+  .wrap {
+    max-width: 343px;
+  }
+}
+
+/*END MOBILE PAGE*/

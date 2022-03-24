@@ -1,0 +1,15 @@
+{
+    "content": [
+        {
+            "id_product": 2,
+            "product_name": "Ellery capsule",
+            "text": "Known for her sculptural takes on&nbsp;traditional tailoring, Australian arbiter of&nbsp;cool Kym Ellery teams up&nbsp;with Moda Operandi.",
+            "price": "52.00",
+            "img": "img/product_card_2.png",
+            "page": [
+                "index"
+            ],
+            "collection": "women"
+        }
+    ]
+}
